@@ -52,9 +52,9 @@ def show_board(board):
             print(f"   {6*'═'}╬{7*'═'}╬{6*'═'}" )
 
 def append_value(letter, number, value, board):
-    if copy_board[number][letter] != '_':
+    if copy_board[letter][number] != '_':
         print("IMPOSSIVEL COLOCAR AI MANO")
-    if value == board[number][letter]:
+    elif value == board[number][letter]:
         copy_board[number][letter] = value
     return copy_board
 
