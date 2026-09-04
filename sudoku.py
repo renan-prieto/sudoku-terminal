@@ -9,7 +9,7 @@ ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' ]
 NUMBERS = ['1', '2', '3', '4', '5', '6', '7', '8', '9' ]
 BOARD_SIZE = 81
 # numero de dicas retiradas
-EASY = 20
+EASY = -20
 MEDIUM = 35
 HARD = 45
 EXTREME = 54
@@ -45,12 +45,22 @@ def remove_tips(diff, copy_board):
     return copy_board
 
 def show_board(board):
-    print("  ", *ALPHABET[0:3]," ", *ALPHABET[3:6:], " ", *ALPHABET[6:9:] )
-    for i in range(0, 9):
-        print( NUMBERS[i], "", *board[i][0:3], "║", *board[i][3:6], "║",  *board[i][6:9])
+    print("   ", "   ".join(map(str, ALPHABET[0:3])),
+          "   ", "   ".join(map(str, ALPHABET[3:6])), 
+          "   ", "   ".join(map(str, ALPHABET[6:9]))
+    )
+    for i in range(9):
+        print(
+            NUMBERS[i], 
+            " ","   ".join(map(str, board[i][0:3])),
+            " ║ ", 
+            "   ".join(map(str, board[i][3:6])),
+            " ║ ", 
+            "   ".join(map(str, board[i][6:9]))
+        )
         if i == 2 or i == 5:
             # ╬ ═
-            print(f"   {6*'═'}╬{7*'═'}╬{6*'═'}" )
+            print(f"   {12*'═'}╬{13*'═'}╬{12*'═'}" )
 
 def append_value(letter, number, value, board):
     msg = ""
@@ -89,14 +99,19 @@ def menu():
         else:
             if diff == 'I':
                 print('BoA SoRtEeEeEeE...')
+                diff = IMPOSSIBLE
             elif diff == 'EX':
                 print('Desafiador...')
+                diff = EXTREME
             elif diff == 'H':
                 print('Veremos se é bom assim...')
+                diff = HARD
             elif diff == 'M':
                 print('Jogador casual.')
+                diff = MEDIUM
             elif diff == 'E':
                 print('Novo de mais para perder.')
+                diff = EASY
             return diff
 
 def clear_screen():
@@ -104,11 +119,11 @@ def clear_screen():
     os.system(command)
 
 
-diff = menu()
+#diff = menu()
 sleep(2)
 sudoku_board = mount_board()
 copy_board = copy.deepcopy(sudoku_board)
-copy_board = remove_tips(2, copy_board)
+copy_board = remove_tips(EASY, copy_board)
 finish = False
 msg = ""
 while finish == False: 
@@ -122,3 +137,11 @@ while finish == False:
         show_board(copy_board)
         print("PARABENS MANOOOO VC GANHOU VIADOO")
         finish = True
+
+#timer
+#marcações
+#quantos valores ainda faltam adicionar no tabuleiro
+
+#comando de selecionar (marcar numero) !s
+#comando de marcar casa !m 
+#comando de reiniciar !r
