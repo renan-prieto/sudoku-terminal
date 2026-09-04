@@ -3,6 +3,7 @@ from random import shuffle, randint
 import copy
 import os
 import platform
+from time import sleep
 # constants
 ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' ]
 NUMBERS = ['1', '2', '3', '4', '5', '6', '7', '8', '9' ]
@@ -52,14 +53,18 @@ def show_board(board):
             print(f"   {6*'═'}╬{7*'═'}╬{6*'═'}" )
 
 def append_value(letter, number, value, board):
+    msg = ""
     if copy_board[number][letter] != '_':
-        print("IMPOSSIVEL COLOCAR AI MANO")
-    if value == board[number][letter]:
+        msg = "IMPOSSIVEL COLOCAR AI MANO"
+    elif value == board[number][letter]:
+        msg = "PARABENS MANO"
         copy_board[number][letter] = value
-    return copy_board
+    else:
+        msg = "VALOR ERRADO"
+    return msg, copy_board
 
 def inserting_data(board):
-    print("[col][lin] [value]")
+    print("exemplo de inserção: A1 1")
     value_and_cord = input('>').upper()
     
     letter_string = value_and_cord[0:1]
@@ -68,22 +73,52 @@ def inserting_data(board):
 
     value  = int(value_and_cord[3:4])
     
-    copy_board = append_value(letter_number, number, value, board)
+    msg, copy_board = append_value(letter_number, number, value, board)
     
-    return copy_board
+    return msg, copy_board
+
+def menu():
+    while True:
+        clear_screen()
+        print("Olá, jogador! Escolha uma dificuldade")
+        print("(E)ASY | (M)EDIUM | (H)ARD | (EX)TREME | (I)MPOSSIBLE")
+        diff = input('>').upper()
+        escolhas = ['E', 'M', 'H', 'EX', 'I']
+        if diff not in escolhas:
+            print('faça uma escolha existente!')
+        else:
+            if diff == 'I':
+                print('BoA SoRtEeEeEeE...')
+            elif diff == 'EX':
+                print('Desafiador...')
+            elif diff == 'H':
+                print('Veremos se é bom assim...')
+            elif diff == 'M':
+                print('Jogador casual.')
+            elif diff == 'E':
+                print('Novo de mais para perder.')
+            return diff
 
 def clear_screen():
     command = 'cls' if platform.system().lower() == "windows" else 'clear'
     os.system(command)
 
+
+diff = menu()
+sleep(2)
 sudoku_board = mount_board()
 copy_board = copy.deepcopy(sudoku_board)
-copy_board = remove_tips(EASY, copy_board)
+copy_board = remove_tips(2, copy_board)
 finish = False
+msg = ""
 while finish == False: 
     clear_screen()
     show_board(copy_board)
-    copy_board = inserting_data(sudoku_board)
-
-
-play_game()
+    print(msg)
+    msg, copy_board = inserting_data(sudoku_board)
+    
+    if copy_board == sudoku_board:
+        clear_screen()
+        show_board(copy_board)
+        print("PARABENS MANOOOO VC GANHOU VIADOO")
+        finish = True
